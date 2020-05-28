@@ -1,14 +1,16 @@
-#ifndef FENETRE_H
-#define FENETRE_H
+#ifndef TETRIXWINDOW_H
+#define TETRIXWINDOW_H
 
 #include <QWidget>
-#include <QLabel>
-#include <QLCDNumber>
-#include <QPushButton>
-#include "Tableau.h"
-#include <QCoreApplication>
-#include <QGridLayout>
 
+QT_BEGIN_NAMESPACE
+class QLCDNumber;
+class QLabel;
+class QPushButton;
+QT_END_NAMESPACE
+
+#include "Tableau.h"
+//! [0]
 class Fenetre : public QWidget
 {
     Q_OBJECT
@@ -17,15 +19,17 @@ public:
     Fenetre(QWidget *parent = nullptr);
 
 private:
-    QLabel *createLabel(const QString &text);
+    QLabel *creationLabel(const QString &text);
 
     Tableau *tableau;
-    QLabel *nextPieceLabel;
-    QLCDNumber *scoreLcd;
-    QLCDNumber *levelLcd;
+    QLabel *LabelPieceSuiv;
+    QLCDNumber *ptsLcd;
+    //QLCDNumber *levelLcd;
     QLCDNumber *linesLcd;
-    QPushButton *startButton;
-    QPushButton *quitButton;
-    QPushButton *pauseButton;
+    QPushButton *buttonStart;
+    QPushButton *buttonQuit;
+    QPushButton *buttonPause;
 };
-#endif // FENETRE_H
+//! [0]
+
+#endif

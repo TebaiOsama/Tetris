@@ -1,25 +1,38 @@
-#ifndef _Piece_h
-#define _Piece_h
+#ifndef PIECE_H
+#define PIECE_H
 
-#include <time.h>
-#include <QDebug>
+enum Formes { Vide, Z, S, Ligne, T, Carre, L, Linvers };
 
-class Piece{
+
+class Piece
+{
 private:
- 	int m_id; //identifiant des pieces
-    int m_grille[4][4]; //definition de la piece dans un espace 4x4
-    int coords[4][2]; //cordonnes piece
- public:
+    //setteurs privés
+    void setX(int index, int x);
+    void setY(int index, int y);
+
+    Formes m_forme; //nom de la forme d'une piece
+    int coords[4][2]; //coordonnés de chaque bloque d'une piece
+
+public:
     Piece(); //constructeur
 
- 	//methodes
- 	void creationPiece(); //fct utilisé dans le constructeur pour creer la piece
- 	void affichagePiece(); //debug
- 	void rotationPiece();
+    void setFormeRandom(); //choisi un forme aleatoire
+    void setForme(Formes forme); //setteur de la forme
 
-    void setCoords(int index, int x, int y);
-    int getX(int index);
-    int getY(int index);
+    Formes forme() const { return m_forme; }
+    int getX(int index) const;
+    int getY(int index) const;
+    //min et max des coordonnes d'une piece
+    int minX();
+    int maxX();
+    int minY();
+    int maxY();
+
+    Piece rotationPiece(); //fonction qui tourne la piece
+
+
 };
+
 
 #endif

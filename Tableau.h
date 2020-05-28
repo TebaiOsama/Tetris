@@ -1,52 +1,69 @@
 #ifndef TABLEAU_H
 #define TABLEAU_H
-#include <iostream>
-#include "Piece.h"
+
+#include <QTimer>
 #include <QFrame>
+#include <QPointer>
+#include <QLabel>
 
-#include <QElapsedTimer>
+#include "Piece.h"
 
-
-#define HEIGHT 22
-#define WIDTH 10
-
-
+#define HAUTEUR 22
+#define LARGEUR 10
 
 class Tableau : public QFrame{
-private:
-    QElapsedTimer* m_timer = new QElapsedTimer(); //chrono
-    int m_points; //pts du joueur
-    bool m_enCours; //1 = debuté
-    bool m_enPause; //1 = en pause
-    Piece* m_pieceCur;  //piece courante
-    Piece* m_pieceSuiv; //piece suivante
-    int tab[HEIGHT][WIDTH]; //largeur
+    Q_OBJECT
 
 public:
-    Tableau();
-    QElapsedTimer* getTime(); //return le temps ecoulé
+    Tableau(QWidget *parent = nullptr);
+    void setLabelPieceSuiv(QLabel *label);
 
-    void quit(); //ferme le jeu
-    //void pause(); //met en pause le jeu
-
-    void check(); //check à chaque fin de tour
-    bool isLineComplete(); //verifie que la ligne est finie
-    bool isGameOver(); //verifie si on a perdu
-
-    void deleteLine(); //supprime les lignes completés
-    void pieceSuivante(); //passe a la piece d'apres
-
-    void resetTableau(); //efface tout et restart
-    void afficherTableau(); //affiche les pieces du tableau
+    QSize sizeHint() const override;
+    QSize minimumSizeHint() const override;
 
 public slots:
     void start();
     void pause();
 
 signals:
-    void scoreChanged(int score);
-    void levelChanged(int level);
-    void linesRemovedChanged(int numLines);
+    void chmntScore(int score);
+
+protected:
+    void paintEvent(QPaintEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
+    void timerEvent(QTimerEvent *event) override;
+
+private:
+
+    Formes &formeDe(int x, int y) { return board[(y * LARGEUR) + x]; }
+    int TempsMax() { return 1000; } //ajouter difficulter
+    int LargeurFenetre() { return contentsRect().width() / LARGEUR; }
+    int HauteurFenetre() { return contentsRect().height() / HAUTEUR; }
+    void effacerTableau();
+    void descenteInst();
+    void descenteRapide();
+    void descente(int haut);
+    void effacerLignes();
+    void newPiece();
+    void pieceSuiv();
+    bool deplace(const Piece &newPiece, int newX, int newY); //renvoie true si on peut deplacer la piece
+    void dessiner(QPainter &painter, int x, int y, Formes forme);
+
+    QBasicTimer timer;
+    QPointer<QLabel> labelPieceSuiv;
+    bool isStarted;
+    bool isPaused;
+    bool isEnAttente;
+    Piece pieceCurr; //piece currante
+    Piece pieceSucc; //piece suivante
+    //coords actuelles
+    int curX;
+    int curY;
+    int lignesSupp;
+    int piecesTot;
+    int pts;
+    int niveau;
+    Formes board[LARGEUR * HAUTEUR];
 };
 
-#endif // TABLEAU_H
+#endif
